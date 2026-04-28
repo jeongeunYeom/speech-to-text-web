@@ -1,10 +1,13 @@
 import os
 import uuid
+import imageio_ffmpeg
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydub import AudioSegment
 from faster_whisper import WhisperModel
+
+AudioSegment.converter = imageio_ffmpeg.get_ffmpeg_exe()
 
 app = FastAPI()
 
