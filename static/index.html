@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>음성 → 텍스트</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f7fb;
+}
+
+/* 전체 레이아웃 */
+.container {
+  display: flex;
+  height: 100vh;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* 왼쪽 */
+.left {
+  flex: 2;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* 오른쪽 */
+.right {
+  flex: 1;
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* 제목 */
+h1 {
+  margin-top: 0;
+}
+
+/* 업로드 영역 */
+.upload-box {
+  margin-top: 20px;
+}
+
+/* 버튼 */
+button {
+  margin-top: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #4f46e5;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+/* 결과 텍스트 */
+textarea {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 상태 */
+#status {
+  margin-top: 10px;
+  color: #666;
+}
+
+/* 다운로드 */
+#downloadLink {
+  display: inline-block;
+  margin-top: 15px;
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* 오른쪽 카드 버튼 */
+.card-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  background: #fafafa;
+  cursor: pointer;
+  text-align: left;
+}
+
+.card-btn:hover {
+  background: #f0f0f0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- 왼쪽 -->
+  <div class="left">
+    <h1>🎤 음성 → 텍스트 변환</h1>
+
+    <div class="upload-box">
+      <input type="file" id="audioFile" accept="audio/*" />
+      <br />
+      <button onclick="uploadFile()">텍스트로 변환하기</button>
+    </div>
+
+    <p id="status"></p>
+
+    <textarea id="result" placeholder="변환된 텍스트가 여기에 표시됩니다."></textarea>
+
+    <a id="downloadLink" href="#" style="display:none;">TXT 다운로드</a>
+  </div>
+
+  <!-- 오른쪽 -->
+  <div class="right">
+    <h3>✨ 추가 기능</h3>
+
+    <button class="card-btn" onclick="summarize()">요약하기</button>
+    <button class="card-btn" onclick="makeNotes()">핵심 정리</button>
+    <button class="card-btn" onclick="translate()">번역 (한↔영)</button>
+    <button class="card-btn" onclick="makeQuiz()">퀴즈 생성</button>
+  </div>
+
+</div>
+
+<script>
+async function uploadFile() {
+  const fileInput = document.getElementById("audioFile");
+  const status = document.getElementById("status");
+  const result = document.getElementById("result");
+  const downloadLink = document.getElementById("downloadLink");
+
+  if (!fileInput.files.length) {
+    alert("파일 선택해줘!");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  status.innerText = "변환 중...";
+  result.value = "";
+  downloadLink.style.display = "none";
+
+  const response = await fetch("/transcribe", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
+
+  result.value = data.text;
+  downloadLink.href = data.txt_download_url;
+  downloadLink.style.display = "inline-block";
+  status.innerText = "완료!";
+}
+
+/* UI용 더미 기능 */
+function summarize() {
+  alert("요약 기능은 다음 단계에서 구현!");
+}
+
+function makeNotes() {
+  alert("핵심 정리 기능 추가 예정!");
+}
+
+function translate() {
+  alert("번역 기능 추가 예정!");
+}
+
+function makeQuiz() {
+  alert("퀴즈 생성 기능 추가 예정!");
+}
+</script>
+
+</body>
+</html>
