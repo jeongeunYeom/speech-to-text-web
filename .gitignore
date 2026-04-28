@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+uploads/
+results/
+*.wav
+*.mp3
+*.m4a
+*.txt
+.cache/
