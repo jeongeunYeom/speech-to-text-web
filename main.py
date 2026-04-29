@@ -21,7 +21,7 @@ os.makedirs(RESULT_DIR, exist_ok=True)
 # Whisper 모델
 # small: 정확도/속도 균형
 # medium: 더 정확하지만 많이 느림
-model = WhisperModel("small", device="cpu", compute_type="int8")
+model = WhisperModel("tiny", device="cpu", compute_type="int8")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
